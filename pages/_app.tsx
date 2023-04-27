@@ -7,16 +7,16 @@ import {
   RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet, polygon, optimism, arbitrum } from 'wagmi/chains';
+import {  bsc } from 'wagmi/chains';
 import { infuraProvider } from 'wagmi/providers/infura';
 import { publicProvider } from 'wagmi/providers/public';
 import { useEffect } from "react";
 
 
 const { chains, provider } = configureChains(
-  [arbitrum],
+  [bsc],
   [
-    infuraProvider({ apiKey: process.env.INFURARPC!}),
+    infuraProvider({ apiKey: "https://bsc-dataseed.binance.org"}),
     publicProvider()
   ]
 );
