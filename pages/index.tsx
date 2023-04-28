@@ -16,7 +16,6 @@ import CustomCOnnectButton from "../src/components/CustomCOnnectButton";
 import { getAccount } from "@wagmi/core";
 import { useAccount } from "wagmi";
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchBalances } from "../src/web3/swapFunction";
 
 
 let hm = hm_l;
@@ -166,21 +165,12 @@ function Home({apikey}:Props) {
       }
     }
   }
-const [fromBalance,setFromBalance] = useState<string>()
-const [toBalance,setToBalance] = useState<string>()
 
 
   useEffect(() => {
 getAccount()
-const init=async()=>{
-  
-  setFromBalance(await fetchBalances(fromTokenState,apikey))
-  setToBalance(await fetchBalances(toTokenState,apikey))
 
-}
-init()
-console.log(fromBalance)
-  }, [address,fromTokenState,toTokenState]);
+  }, [address]);
 
   return (
     <RootLayout>
@@ -212,7 +202,7 @@ console.log(fromBalance)
               ChooseToken
             </button>
           </div>
-          <p style={balanceStyle}>Balance: {fromBalance}</p>
+          {/* <p style={balanceStyle}>Balance: {fromBalance}</p> */}
           <div>
             <label htmlFor="input2Disabled"></label>
             <input
@@ -237,7 +227,7 @@ console.log(fromBalance)
               ChooseToken
             </button>
           </div>
-          <p style={balanceStyle}>Balance: {toBalance}</p>
+          {/* <p style={balanceStyle}>Balance: {toBalance}</p> */}
 
         <CustomCOnnectButton confirmSwap={confirmSwap} valueExchanged={valueExchanged} valueExchangedDecimals={valueExchangedDecimals} />
         
