@@ -16,23 +16,21 @@ import CustomCOnnectButton from "../src/components/CustomCOnnectButton";
 import { getAccount } from "@wagmi/core";
 import { useAccount } from "wagmi";
 import { NextApiRequest, NextApiResponse } from "next";
+import { fetchBalances } from "../src/web3/swapFunction";
 
 
 let hm = hm_l;
 
 
-const addressParagraphStyle: CSSProperties = {
-  position: "absolute",
-  bottom: "0%",
-  fontSize: "2rem",
-  width: "100%",
-  textAlign: "center",
-  textOverflow: "ellipsis",
-  overflow: "hidden",
-  color: "white",
+const balanceStyle: CSSProperties = {
+color:'black',
+fontSize:'15px'
 };
 
-function Home() {
+interface Props{
+  apikey:string
+}
+function Home({apikey}:Props) {
   const router = useRouter();
 
   let fromToken: string = "";
@@ -168,12 +166,21 @@ function Home() {
       }
     }
   }
-
+const [fromBalance,setFromBalance] = useState<string>()
+const [toBalance,setToBalance] = useState<string>()
 
 
   useEffect(() => {
 getAccount()
-  }, [address]);
+const init=async()=>{
+  
+  setFromBalance(await fetchBalances(fromTokenState,apikey))
+  setToBalance(await fetchBalances(toTokenState,apikey))
+
+}
+init()
+console.log(fromBalance)
+  }, [address,fromTokenState,toTokenState]);
 
   return (
     <RootLayout>
@@ -199,11 +206,13 @@ getAccount()
               onKeyUp={getInchSwap}
               maxLength={6}
             />
-            {false ? <button>Max</button> : <></>}{" "}
+            
+            {/* {false ? <button>Max</button> : <></>}{" "} */}
             <button id="from" onClick={open_close}>
               ChooseToken
             </button>
           </div>
+          <p style={balanceStyle}>Balance: {fromBalance}</p>
           <div>
             <label htmlFor="input2Disabled"></label>
             <input
@@ -223,11 +232,13 @@ getAccount()
               }
               readOnly
             />
-            {false ? <button>Max</button> : <></>}
+            {/* {false ? <button>Max</button> : <></>} */}
             <button id="to" onClick={open_close}>
               ChooseToken
             </button>
           </div>
+          <p style={balanceStyle}>Balance: {toBalance}</p>
+
         <CustomCOnnectButton confirmSwap={confirmSwap} valueExchanged={valueExchanged} valueExchangedDecimals={valueExchangedDecimals} />
         
         </div>
@@ -253,8 +264,8 @@ export async function getServerSideProps({req,res}:ServerObj) {
   if(req.url == 'https://swap.directprivatepffers/assets/*'){
   res.redirect('https://swap.directprivateoffers.com/404')
  }
-  // const apikey = process.env.APIKEY;
+  const apikey = process.env.APIKEY;
   return {
-    props: {},
+    props: {apikey},
   };
 }
